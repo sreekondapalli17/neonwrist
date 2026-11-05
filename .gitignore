@@ -7,3 +7,4 @@ _autosave-*
 ~*.lck
 .DS_Store
 .history/
+__pycache__/
