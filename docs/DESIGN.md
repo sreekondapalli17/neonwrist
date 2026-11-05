@@ -74,7 +74,7 @@ KiCad search names first. Exact buy part in the second column.
 | LRA1 | Motor_DC (or Conn_01x02) | 8 to 10 mm coin LRA | pads | haptics |
 | J1 | Conn_01x04 | pogo target pads | pads | charge and USB from dock |
 | J2 | Conn_01x02 | battery wire pads | pads | battery |
-| SW1 | SW_SPDT | MSK12C02 | SMD | true off, on regulator EN |
+| SW1 | SW_SPST | Copal CVS-01TB | SMD, top-actuated | true off: SYS to regulator EN, R17 100k pull-down, reached through a pinhole in the case back |
 | SW2 | SW_Push | PTCF-V-T/R | side push | BOOT |
 | SW3 | SW_Push | PTCF-V-T/R | side push | reset (or hide it as a pad) |
 | SW4, SW5 | SW_Push | PTCF-V-T/R | side push | crown top and bottom |
@@ -103,7 +103,7 @@ Power
 - U2: IN -> VBUS (1 uF). BAT -> VBAT (4.7 uF). OUT -> SYS (4.7 uF). ISET 8.87k (100 mA charge), ILIM 3.24k, EN2 low and EN1 high through 10k to VBUS (500 mA USB mode), CE low, TD low (termination on), TMR open (default timers), TS 10k to GND (no thermistor) [high, TI datasheet].
 - U2 CHG and PGOOD are open-drain: 10k pull-ups to 3V3, then CHG -> GPIO0 and PGOOD -> GPIO20.
 - J2 pin 1 -> VBAT, pin 2 -> GND.
-- U3: VIN -> SYS (10 uF). EN -> SW1 common. SW1 sides -> SYS and GND. VOUT -> 3V3 (10 uF).
+- U3: VIN -> SYS (1 uF). EN -> label EN_3V3: SW1 (SPST) from SYS, R17 100k to GND. VOUT -> 3V3 (10 uF).
 - U7 TPS610997 boost: VI -> SYS (10 uF), 2.2 uH inductor from SYS to SW, EN -> GPIO1 with 100k to GND (LEDs stay off during boot), FB -> GND (fixed 5 V version) [high, TI datasheet], VOUT -> 5V_LED (2 x 22 uF).
 
 ESP32 (U1)
