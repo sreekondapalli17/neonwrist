@@ -52,15 +52,21 @@ def pad_centroid(f):
     return sum(xs)/len(xs), sum(ys)/len(ys)
 
 def aim(f, dx, dy):
-    """rotate so the side of the part with no pads (antenna, actuator) points along (dx,dy)"""
-    best = None
-    for a in range(0, 360, 90):
-        set_rot(f, a)
+    """rotate (any angle) so the side of the part with no pads (antenna, actuator) points along (dx,dy)"""
+    def vec():
         l, t, r, b = bbox(f); px, py = pad_centroid(f)
-        vx, vy = (l+r)/2 - px, (t+b)/2 - py
-        n = math.hypot(vx, vy) or 1
-        score = (vx*dx + vy*dy) / n
-        if best is None or score > best[0]: best = (score, a)
+        return (l+r)/2 - px, (t+b)/2 - py
+    def score():
+        vx, vy = vec(); n = math.hypot(vx, vy) or 1
+        return (vx*dx + vy*dy) / n
+    set_rot(f, 0)
+    vx, vy = vec()
+    delta = math.degrees(math.atan2(dy, dx) - math.atan2(vy, vx))
+    best = None
+    for a in (-delta, delta):
+        set_rot(f, a % 360)
+        sc = score()
+        if best is None or sc > best[0]: best = (sc, a % 360)
     set_rot(f, best[1])
 
 def polar(r, deg):           # deg clockwise from 12 o'clock
@@ -119,7 +125,7 @@ for k, c in enumerate(range(20, 32)):     # LED decoupling between the rings
     x, y = polar(15.0, 15 + k*30); near('C%d' % c, x, y, back=False, rot=-(15+k*30))
 
 # ---------- BACK: rim parts first ----------
-for ref, ang, R in [('SW4', 60, 18.7), ('SW1', 90, 19.1), ('SW5', 120, 18.7), ('SW2', 150, 18.7), ('SW3', 210, 18.7)]:
+for ref, ang, R in [('SW4', 60, 18.9), ('SW5', 120, 18.9), ('SW2', 150, 18.9), ('SW3', 210, 18.9)]:
     x, y = polar(R, ang); t = math.radians(ang)
     put(ref, x, y, back=True, aim_dir=(math.sin(t), -math.cos(t)))
 put('J1', CX, CY + 14.5, back=True)       # pogo pads, 6 o'clock
@@ -136,13 +142,16 @@ for ref, x, y in [('U5', CX-1.0, CY-10.5), ('U9', CX+1.5, CY-14.5), ('M1', CX-4.
     near(ref, x, y, back=True)
 
 # ---------- BACK: passives next to the chip they belong to ----------
-groups = {'U2': ['C1','C2','C3','R1','R2','R3','R4','R5','R6'], 'U3': ['C4','C5'], 'U7': ['C6','C7','C8','R7'],
+groups = {'U3x': ['SW1', 'R17'], 'U2': ['C1','C2','C3','R1','R2','R3','R4','R5','R6'], 'U3': ['C4','C5'], 'U7': ['C6','C7','C8','R7'],
           'U1': ['C9','C10','R8','C11','R9','R10','R11','R12','R13','R14'], 'U8': ['C12','R15'],
           'U5': ['C13','C14'], 'U4': ['C15','R16'], 'U9': ['C16','C17','C18']}
 for ic, parts in groups.items():
-    f = fp(ic)
-    if not f: continue
-    ax, ay = pcbnew.ToMM(f.GetPosition().x), pcbnew.ToMM(f.GetPosition().y)
+    if ic == 'U3x':
+        ax, ay = CX + 11.5, CY + 9.0          # power switch inside the back, near the regulator
+    else:
+        f = fp(ic)
+        if not f: continue
+        ax, ay = pcbnew.ToMM(f.GetPosition().x), pcbnew.ToMM(f.GetPosition().y)
     if ic == 'U1': ax, ay = CX + 1.0, CY + 6.5     # keep module passives off the antenna end
     for p in parts: near(p, ax, ay, back=True)
 
