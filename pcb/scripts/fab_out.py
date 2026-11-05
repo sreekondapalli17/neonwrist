@@ -15,7 +15,7 @@ def text(s, x, y, h, w):
     t.SetTextAngle(pcbnew.EDA_ANGLE(90, pcbnew.DEGREES_T))
     t.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y))); B.Add(t)
 text('NEON//WRIST', 149.6, 100.0, 1.1, 0.18)
-text('MK-II', 151.4, 100.0, 0.7, 0.12)
+text('MK-II', 151.4, 100.0, 0.8, 0.13)
 pcbnew.Refresh()
 
 pc = pcbnew.PLOT_CONTROLLER(B); po = pc.GetPlotOptions()
