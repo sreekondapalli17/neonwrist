@@ -9,7 +9,7 @@ for layer in (pcbnew.In1_Cu, pcbnew.F_Cu, pcbnew.B_Cu):
     z = pcbnew.ZONE(B); z.SetLayer(layer); z.SetNetCode(gnd.GetNetCode())
     pts = [pcbnew.VECTOR2I(mm(CX + R*math.cos(math.radians(a))), mm(CY + R*math.sin(math.radians(a)))) for a in range(0, 360, 5)]
     z.AppendCorner(pts[0], -1)
-    for p in pts[1:]: z.AppendCorner(p, 0)
+    for p in pts[1:]: z.AppendCorner(p, -1)
     z.SetMinThickness(mm(0.2)); z.SetLocalClearance(mm(0.2))
     try: z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
     except Exception: pass

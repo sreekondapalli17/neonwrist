@@ -13,6 +13,25 @@ for t in B.GetTracks():
         t.SetWidth(mm(0.1)); n += 1
 out.append('widened %d thin track pieces to 0.1 mm' % n)
 
+# 1b) remove vias that only touch one layer (autorouter leftovers)
+ends = {}
+for t in B.GetTracks():
+    if t.GetClass() == 'PCB_TRACK':
+        for e in (t.GetStart(), t.GetEnd()):
+            ends.setdefault((e.x, e.y, t.GetNetCode()), set()).add(t.GetLayer())
+dv = 0
+for v in list(B.GetTracks()):
+    if v.GetClass() == 'PCB_VIA' and v.GetNetCode() != G:
+        p = v.GetPosition(); layers = set()
+        for (x, y, n), ls in ends.items():
+            if n == v.GetNetCode() and abs(x - p.x) < mm(0.05) and abs(y - p.y) < mm(0.05): layers |= ls
+        for f in B.GetFootprints():
+            for pd in f.Pads():
+                if pd.GetNetCode() == v.GetNetCode() and pd.HitTest(p):
+                    layers |= set([pcbnew.F_Cu] if pd.IsOnLayer(pcbnew.F_Cu) else []) | set([pcbnew.B_Cu] if pd.IsOnLayer(pcbnew.B_Cu) else [])
+        if len(layers) < 2: B.Remove(v); dv += 1
+out.append('removed %d dangling vias' % dv)
+
 # 2) GND copper on In1, F.Cu, B.Cu
 for z in list(B.Zones()):
     if not z.GetIsRuleArea() and z.GetNetCode() == G: B.Remove(z)
@@ -20,7 +39,7 @@ for layer in (pcbnew.In1_Cu, pcbnew.F_Cu, pcbnew.B_Cu):
     z = pcbnew.ZONE(B); z.SetLayer(layer); z.SetNetCode(G)
     pts = [pcbnew.VECTOR2I(mm(CX + RZ*math.cos(math.radians(a))), mm(CY + RZ*math.sin(math.radians(a)))) for a in range(0, 360, 5)]
     z.AppendCorner(pts[0], -1)
-    for p in pts[1:]: z.AppendCorner(p, 0)
+    for p in pts[1:]: z.AppendCorner(p, -1)
     z.SetMinThickness(mm(0.15)); z.SetLocalClearance(mm(0.15))
     try: z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
     except Exception: pass
