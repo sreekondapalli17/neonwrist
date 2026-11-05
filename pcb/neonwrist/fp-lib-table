@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "PCM_Espressif")(type "KiCad")(uri "${KIPRJMOD}/../libs/espressif/footprints/Espressif.pretty")(options "")(descr "Espressif modules, from espressif/kicad-libraries"))
+  (lib (name "NeonWrist")(type "KiCad")(uri "${KIPRJMOD}/../libs/NeonWrist.pretty")(options "")(descr "Custom NEON//WRIST pads"))
+)

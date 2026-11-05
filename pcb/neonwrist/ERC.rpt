@@ -1,0 +1,47 @@
+ERC report (2026-11-04T23:33:50, Encoding UTF8)
+Report includes: Errors, Warnings, Exclusions
+
+***** Sheet /
+[lib_symbol_mismatch]: Symbol 'PWR_FLAG' doesn't match copy in library 'power'
+    ; warning
+    @(850 mils, 2750 mils): Symbol #FLG01 [PWR_FLAG]
+[lib_symbol_mismatch]: Symbol 'Conn_01x04' doesn't match copy in library 'Connector_Generic'
+    ; warning
+    @(1200 mils, 1950 mils): Symbol J1 [Conn_01x04]
+[lib_symbol_mismatch]: Symbol 'PWR_FLAG' doesn't match copy in library 'power'
+    ; warning
+    @(1250 mils, 2750 mils): Symbol #FLG02 [PWR_FLAG]
+[footprint_link_issues]: The current configuration does not include the footprint library 'PCM_Espressif'
+    ; warning
+    @(3550 mils, 6900 mils): Symbol U1 [ESP32-C3-MINI-1]
+[lib_symbol_mismatch]: Symbol 'TPS610997DRV' doesn't match copy in library 'Regulator_Switching'
+    ; warning
+    @(9450 mils, 2150 mils): Symbol U7 [TPS610997DRV]
+[pin_to_pin]: Pins of type Bidirectional and Power output are connected
+    ; warning
+    @(9850 mils, 6200 mils): Symbol U5 Pin 1 [SDO/SA0, Bidirectional, Line]
+    @(1250 mils, 2750 mils): Symbol #FLG02 Pin 1 [pwr, Power output, Line]
+[pin_to_pin]: Pins of type Bidirectional and Power output are connected
+    ; warning
+    @(9850 mils, 6300 mils): Symbol U5 Pin 2 [SDX, Bidirectional, Line]
+    @(1250 mils, 2750 mils): Symbol #FLG02 Pin 1 [pwr, Power output, Line]
+[lib_symbol_mismatch]: Symbol 'L' doesn't match copy in library 'Device'
+    ; warning
+    @(10650 mils, 1950 mils): Symbol L1 [L]
+[lib_symbol_mismatch]: Symbol 'PWR_FLAG' doesn't match copy in library 'power'
+    ; warning
+    @(11100 mils, 2350 mils): Symbol #FLG03 [PWR_FLAG]
+[footprint_link_issues]: Footprint 'VSSOP-10_3x3mm_P0.5mm' not found in library 'Package_SO'
+    ; warning
+    @(15550 mils, 6500 mils): Symbol U9 [DRV2605LDGS]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'Driver_Haptic'
+    ; warning
+    @(15550 mils, 6500 mils): Symbol U9 [DRV2605LDGS]
+
+ ** ERC messages: 11  Errors 0  Warnings 11
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters
