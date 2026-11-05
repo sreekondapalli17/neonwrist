@@ -129,11 +129,12 @@ for ref, ang, R in [('SW4', 60, 18.9), ('SW5', 120, 18.9), ('SW2', 150, 18.9), (
     x, y = polar(R, ang); t = math.radians(ang)
     put(ref, x, y, back=True, aim_dir=(math.sin(t), -math.cos(t)))
 put('J1', CX, CY + 14.5, back=True)       # pogo pads, 6 o'clock
-put('J2', CX - 9.5, CY + 12.5, back=True) # battery wires
+near('J2', CX - 11.5, CY + 9.5, back=True) # battery wires
 
 # ---------- BACK: module and chips ----------
 placed[True].remove(KO)
 put('U1', CX - 5.6, CY, back=True, aim_dir=(1, 0))    # antenna toward the centre, keepout inside the hour ring
+_u1 = fp('U1'); set_rot(_u1, round(_u1.GetOrientationDegrees()/90)*90 % 360); set_pos(_u1, CX - 5.6, CY)   # keep it square
 placed[True].append(KO)
 for ref, x, y in [('U2', CX+8.5, CY-2.5), ('U3', CX+8.0, CY+5.0), ('U7', CX+6.0, CY-9.5), ('L1', CX+9.5, CY-9.5)]:
     put(ref, x, y, back=True)
@@ -156,10 +157,8 @@ for ic, parts in groups.items():
     for p in parts: near(p, ax, ay, back=True)
 
 for f in B.GetFootprints():
-    r = f.GetReference()
-    if r[0] in 'DCRL' and r[1:].isdigit():
-        try: f.Reference().SetVisible(False)
-        except Exception: pass
+    try: f.Reference().SetVisible(False)   # no reference text on this tiny board
+    except Exception: pass
     try: f.Value().SetVisible(False)
     except Exception: pass
 
