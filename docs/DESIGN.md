@@ -63,7 +63,7 @@ KiCad search names first. Exact buy part in the second column.
 | U1 | ESP32-C3-MINI-1 | ESP32-C3-MINI-1-N4 | module 16.6 x 13.2 | brain, BLE |
 | U2 | BQ24072 | BQ24072RGTR | VQFN-16 3x3 | power-path LiPo charger |
 | U3 | AP2112K-3.3 | AP2112K-3.3TRG1 | SOT-23-5 | 3.3 V regulator |
-| U4 | LC709203F | LC709203FQH-01TWG | WDFN-12 | fuel gauge, battery percent |
+| U4 | LC709203F | LC709203FQH-01TWG | WDFN-8 4x3 | fuel gauge, battery percent |
 | U5 | LSM6DS3 | LSM6DS3TR-C | LGA-14 | IMU, wrist tilt, taps |
 | U7 | TPS610997DRV | TPS610997DRVR | WSON-6 2x2 | 5 V boost for the LEDs, true off when EN is low |
 | U8 | 74AHCT1G125 | 74AHCT1G125GW | SOT-353 | 3.3 V to 5 V LED data |
