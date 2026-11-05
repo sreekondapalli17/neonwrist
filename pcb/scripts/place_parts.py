@@ -17,7 +17,8 @@ try:
     nc = ds.m_NetSettings.GetDefaultNetclass()
     nc.SetClearance(mm(0.1)); nc.SetTrackWidth(mm(0.15))
     ds.m_MinClearance = mm(0.1)
-    log.append('default clearance 0.1 mm, track 0.15 mm')
+    ds.m_CopperEdgeClearance = mm(0.3)
+    log.append('default clearance 0.1 mm, track 0.15 mm, copper to edge 0.3 mm')
 except Exception as e:
     log.append('set clearance by hand in Board Setup > Net Classes (0.1 mm): %s' % e)
 
@@ -66,6 +67,9 @@ def polar(r, deg):           # deg clockwise from 12 o'clock
     t = math.radians(deg); return CX + r*math.sin(t), CY - r*math.cos(t)
 
 placed = {False: [], True: []}
+# antenna keepout of U1 (antenna points at the board centre): nothing on either side may go here
+KO = (CX-3.0, CY-7.0, CX+3.0, CY+7.0, 'antenna keepout')
+placed[False].append(KO); placed[True].append(KO)
 def overlaps(box, side, margin=0.15):
     l, t, r, b = box
     for (L, T, R, Bo, ref) in placed[side]:
@@ -109,20 +113,22 @@ for i in range(60):                       # minute ring, D1 at 12 o'clock, clock
     x, y = polar(18.0, i*6); put('D%d' % (i+1), x, y, -i*6)
 for i in range(12):                       # hour ring
     x, y = polar(12.0, i*30); put('D%d' % (61+i), x, y, -i*30)
-put('U10', CX, CY - 8.5)
-near('C19', CX + 2.2, CY - 8.5, back=False)
+put('U10', CX, CY - 9.0)
+near('C19', CX + 2.4, CY - 9.2, back=False)
 for k, c in enumerate(range(20, 32)):     # LED decoupling between the rings
     x, y = polar(15.0, 15 + k*30); near('C%d' % c, x, y, back=False, rot=-(15+k*30))
 
 # ---------- BACK: rim parts first ----------
-for ref, ang, R in [('SW4', 60, 18.7), ('SW1', 90, 18.2), ('SW5', 120, 18.7), ('SW2', 150, 18.7), ('SW3', 210, 18.7)]:
+for ref, ang, R in [('SW4', 60, 18.7), ('SW1', 90, 19.1), ('SW5', 120, 18.7), ('SW2', 150, 18.7), ('SW3', 210, 18.7)]:
     x, y = polar(R, ang); t = math.radians(ang)
     put(ref, x, y, back=True, aim_dir=(math.sin(t), -math.cos(t)))
 put('J1', CX, CY + 14.5, back=True)       # pogo pads, 6 o'clock
 put('J2', CX - 9.5, CY + 12.5, back=True) # battery wires
 
 # ---------- BACK: module and chips ----------
-put('U1', CX - 4.5, CY, back=True, aim_dir=(-1, 0))   # antenna toward 9 o'clock
+placed[True].remove(KO)
+put('U1', CX - 5.6, CY, back=True, aim_dir=(1, 0))    # antenna toward the centre, keepout inside the hour ring
+placed[True].append(KO)
 for ref, x, y in [('U2', CX+8.5, CY-2.5), ('U3', CX+8.0, CY+5.0), ('U7', CX+6.0, CY-9.5), ('L1', CX+9.5, CY-9.5)]:
     put(ref, x, y, back=True)
 for ref, x, y in [('U5', CX-1.0, CY-10.5), ('U9', CX+1.5, CY-14.5), ('M1', CX-4.5, CY-15.0),
